@@ -1,4 +1,4 @@
-import { createJsonHttpClient } from "../../infrastructure/http/json-http-client.js";
+import { createJsonHttpClient } from "../../infrastructure/http/json-http-client-factory.js";
 import { createDashboardHttpQuery } from "../../infrastructure/http/dashboard-http-query-factory.js";
 import { createReservationHttpCommand } from "../../infrastructure/http/reservation-http-command-factory.js";
 import { createDemoHttpCommand } from "../../infrastructure/http/demo-http-command-factory.js";

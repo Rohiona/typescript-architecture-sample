@@ -1,5 +1,5 @@
 import type { DemoCommandPort } from "../../application/ports/demo-command-port.js";
-import type { JsonHttpClient } from "./json-http-client.js";
+import type { JsonHttpClient } from "./json-http-client-factory.js";
 
 export function createDemoHttpCommand(client: JsonHttpClient): DemoCommandPort {
   return {

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { createJsonHttpClient } from "../../src/infrastructure/http/json-http-client.js";
+import { createJsonHttpClient } from "../../src/infrastructure/http/json-http-client-factory.js";
 import { createDashboardHttpQuery } from "../../src/infrastructure/http/dashboard-http-query-factory.js";
 import { createReservationHttpCommand } from "../../src/infrastructure/http/reservation-http-command-factory.js";
 import { createDemoHttpCommand } from "../../src/infrastructure/http/demo-http-command-factory.js";

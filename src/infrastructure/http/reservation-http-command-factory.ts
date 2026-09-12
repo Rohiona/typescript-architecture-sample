@@ -1,5 +1,5 @@
 import type { ReservationCommandPort } from "../../application/ports/reservation-command-port.js";
-import type { JsonHttpClient } from "./json-http-client.js";
+import type { JsonHttpClient } from "./json-http-client-factory.js";
 
 export function createReservationHttpCommand(client: JsonHttpClient): ReservationCommandPort {
   return {
