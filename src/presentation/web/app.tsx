@@ -1,15 +1,5 @@
 import { useState } from "react";
-import {
-  ArrowRight,
-  ArrowUpRight,
-  Check,
-  ChevronRight,
-  ClipboardList,
-  LayoutGrid,
-  LoaderCircle,
-  PackageOpen,
-  RefreshCw,
-} from "lucide-react";
+import { Check, ChevronRight, ClipboardList, LayoutGrid, LoaderCircle, PackageOpen, RefreshCw } from "lucide-react";
 import type { DashboardQueryPort } from "../../application/ports/dashboard-query-port.js";
 import type { ReservationCommandPort } from "../../application/ports/reservation-command-port.js";
 import type { DemoCommandPort } from "../../application/ports/demo-command-port.js";
@@ -34,7 +24,7 @@ const actionMessages: Record<RentalAction, string> = {
   confirm: "予約を確定しました。利用開始時にスタッフが貸し出します。",
   cancel: "予約をキャンセルしました。",
   check_out: "機材を貸し出しました。",
-  return: "返却を受け付けました。おつかれさまでした。",
+  return: "返却を受け付けました。",
 };
 
 export function RentalDeskApp({ dashboardQuery, reservationCommands, demoCommands }: RentalDeskAppProps) {
@@ -64,12 +54,12 @@ export function RentalDeskApp({ dashboardQuery, reservationCommands, demoCommand
           <span className="brand-mark">
             <PackageOpen size={23} />
           </span>
-          RENTAL DESK<span className="brand-dot">.</span>
+          機材レンタル管理
         </div>
         <div className="initial-content">
           {loadError ? (
             <>
-              <h1>貸出デスクに接続できませんでした</h1>
+              <h1>データを読み込めませんでした</h1>
               <p role="alert">{loadError}</p>
               <button
                 className="button primary"
@@ -86,7 +76,7 @@ export function RentalDeskApp({ dashboardQuery, reservationCommands, demoCommand
           ) : (
             <>
               <LoaderCircle className="spinner" size={28} />
-              <p role="status">貸出デスクを準備しています…</p>
+              <p role="status">読み込み中…</p>
             </>
           )}
         </div>
@@ -98,9 +88,6 @@ export function RentalDeskApp({ dashboardQuery, reservationCommands, demoCommand
   );
   const openCount = myReservations.filter((reservation) =>
     ["held", "confirmed", "checked_out"].includes(reservation.effectiveStatus),
-  ).length;
-  const checkoutCount = dashboard.reservations.filter(
-    (reservation) => reservation.effectiveStatus === "checked_out",
   ).length;
   const visiblePage = page === "desk" && actor.role !== "staff" ? "reservations" : page;
 
@@ -118,10 +105,8 @@ export function RentalDeskApp({ dashboardQuery, reservationCommands, demoCommand
           <span className="brand-mark">
             <PackageOpen size={23} strokeWidth={1.7} />
           </span>
-          RENTAL DESK<span className="brand-dot">.</span>
+          機材レンタル管理
         </a>
-        <span className="brand-caption">道具と、次のアイデア。</span>
-        <div className="sidebar-section-label">WORKSPACE</div>
         <nav className="main-nav" aria-label="メインメニュー">
           <button
             type="button"
@@ -152,32 +137,8 @@ export function RentalDeskApp({ dashboardQuery, reservationCommands, demoCommand
             </button>
           )}
         </nav>
-        <div className="sidebar-bottom">
-          <div className="sidebar-note">
-            <span className="tiny-cross">+</span>
-            <p>
-              つくる人の、
-              <br />
-              小さな貸出デスク。
-            </p>
-            <span>EQUIPMENT RENTAL STUDIO</span>
-          </div>
-          <div className="sidebar-footer">
-            <span className="online-dot" />
-            デモスペース
-            <ArrowUpRight size={14} />
-          </div>
-        </div>
       </aside>
       <div className="workspace">
-        <header className="workspace-header">
-          <span>
-            ワークスペース
-            <ChevronRight size={13} />
-            <strong>{pageLabels[visiblePage]}</strong>
-          </span>
-          <span className="header-mode">{actor.role === "staff" ? "スタッフモード" : "メンバーモード"}</span>
-        </header>
         <DemoControls
           now={dashboard.now}
           customers={dashboard.customers}
@@ -231,36 +192,8 @@ export function RentalDeskApp({ dashboardQuery, reservationCommands, demoCommand
               </button>
             </div>
           )}
-          <section className="page-intro">
-            <div>
-              <div className="eyebrow">
-                {visiblePage === "equipment"
-                  ? "A LITTLE GEAR. A BIG IDEA."
-                  : visiblePage === "reservations"
-                    ? "YOUR RENTAL PLANS"
-                    : "READY, SET, CREATE."}
-              </div>
-              <h1>
-                {visiblePage === "equipment" ? (
-                  <>
-                    次の「つくる」に、
-                    <br className="mobile-break" />
-                    ちょうどいい道具を。
-                  </>
-                ) : (
-                  pageLabels[visiblePage]
-                )}
-              </h1>
-              <p>
-                {visiblePage === "equipment"
-                  ? "撮影も、発表も。必要な機材を、必要な時間だけ。"
-                  : visiblePage === "reservations"
-                    ? actor.role === "staff"
-                      ? "すべての利用者の予約と、その後の状況を確認できます。"
-                      : actor.name + "さんの予約を、ここでまとめて確認。"
-                    : "機材の受け渡しを、ひとつずつ確実に。貸出・返却を管理します。"}
-              </p>
-            </div>
+          <section className="page-heading">
+            <h1>{pageLabels[visiblePage]}</h1>
             <button
               type="button"
               className="refresh-button"
@@ -277,33 +210,6 @@ export function RentalDeskApp({ dashboardQuery, reservationCommands, demoCommand
 
           {visiblePage === "equipment" ? (
             <>
-              <div className="overview-strip">
-                <div>
-                  <span className="overview-label">選べる機材</span>
-                  <strong>
-                    {dashboard.equipment.length}
-                    <small>種類</small>
-                  </strong>
-                </div>
-                <div>
-                  <span className="overview-label">{actor.role === "staff" ? "進行中の予約" : "あなたの予約"}</span>
-                  <strong>
-                    {openCount}
-                    <small>件</small>
-                  </strong>
-                </div>
-                <div>
-                  <span className="overview-label">ただいま貸出中</span>
-                  <strong>
-                    {checkoutCount}
-                    <small>件</small>
-                  </strong>
-                </div>
-                <div className="overview-message">
-                  <span className="online-dot" />
-                  今日も、制作をサポートします。
-                </div>
-              </div>
               <EquipmentCatalogue
                 equipment={dashboard.equipment}
                 selectedId={selectedEquipment?.id ?? ""}
@@ -338,33 +244,13 @@ export function RentalDeskApp({ dashboardQuery, reservationCommands, demoCommand
                   />
                 )}
                 <div className="right-column">
-                  <section className="how-it-works" aria-labelledby="steps-title">
-                    <div className="section-heading">
-                      <h2 id="steps-title">ご利用のながれ</h2>
-                      <ArrowRight size={17} />
-                    </div>
+                  <section className="demo-instructions" aria-labelledby="steps-title">
+                    <h2 id="steps-title">デモの操作</h2>
                     <ol>
-                      <li>
-                        <span>01</span>
-                        <div>
-                          <strong>機材と時間を選ぶ</strong>
-                          <p>まずは仮予約。15分以内に確定します。</p>
-                        </div>
-                      </li>
-                      <li>
-                        <span>02</span>
-                        <div>
-                          <strong>開始時刻に受け取る</strong>
-                          <p>スタッフが予約を確認して貸し出します。</p>
-                        </div>
-                      </li>
-                      <li>
-                        <span>03</span>
-                        <div>
-                          <strong>使い終わったら返却</strong>
-                          <p>次の人の「つくる」につなげましょう。</p>
-                        </div>
-                      </li>
+                      <li>利用者を選び、機材・期間・数量を入力して仮予約します。</li>
+                      <li>「予約一覧」で15分以内に予約を確定します。</li>
+                      <li>スタッフに切り替え、時刻を利用開始後へ進めます。</li>
+                      <li>「貸出管理」で貸出・返却を操作します。</li>
                     </ol>
                   </section>
                   <ActivityFeed activities={dashboard.activities} />
@@ -391,11 +277,7 @@ export function RentalDeskApp({ dashboardQuery, reservationCommands, demoCommand
           )}
         </main>
         <footer className="site-footer">
-          <span>
-            RENTAL DESK<span className="brand-dot">.</span>
-            <span className="footer-divider" />
-            サンプルアプリ / 架空の機材・利用者です
-          </span>
+          <span>サンプルアプリ / 架空の機材・利用者です</span>
           <span>すべての日時は日本時間（JST）</span>
         </footer>
       </div>

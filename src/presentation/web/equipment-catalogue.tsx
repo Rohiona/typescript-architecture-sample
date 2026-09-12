@@ -3,8 +3,6 @@ import type { Equipment } from "../../domain/rentals/types.js";
 import { EquipmentArt } from "./equipment-art.js";
 import { formatPeriod } from "./date-time.js";
 
-const categories = { camera: "CAPTURE", projector: "PRESENT", tripod: "SUPPORT" };
-
 export function EquipmentCatalogue({
   equipment,
   selectedId,
@@ -17,16 +15,13 @@ export function EquipmentCatalogue({
   return (
     <section aria-labelledby="equipment-title">
       <div className="section-heading">
-        <h2 id="equipment-title">機材を選ぶ</h2>
-        <span>{equipment.length} items</span>
+        <h2 id="equipment-title">機材を選択</h2>
+        <span>{equipment.length}種類</span>
       </div>
       <div className="equipment-grid">
-        {equipment.map((item, index) => (
+        {equipment.map((item) => (
           <article className={"equipment-card" + (selectedId === item.id ? " selected" : "")} key={item.id}>
             <div className="equipment-visual">
-              <span className="equipment-index">
-                0{index + 1} / {categories[item.category]}
-              </span>
               <EquipmentArt category={item.category} />
               {selectedId === item.id && (
                 <span className="selected-marker" aria-label="選択中">

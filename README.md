@@ -2,17 +2,11 @@
 
 [![Quality](https://github.com/Rohiona/typescript-architecture-sample/actions/workflows/ci.yml/badge.svg)](https://github.com/Rohiona/typescript-architecture-sample/actions/workflows/ci.yml)
 
-**予約できるか、なぜできないかを、コードと画面の両方で説明する。**
-
-機材レンタルの予約・貸出を題材にした、ローカルで動くTypeScriptアーキテクチャサンプルです。
-架空の利用者と機材を使い、予約の判定・保存・貸出・返却は実際に動作します。
-APIキーや別のDBサーバーは不要です。画面の名称は「RENTAL DESK」です。
+機材の予約・貸出・返却を実装した、ローカルで動くTypeScriptのアーキテクチャサンプルです。
+架空の利用者と機材を使い、データはSQLiteに保存します。
+APIキーや別のDBサーバーは不要です。
 
 ![機材一覧と予約フォームの画面](docs/preview.png)
-
-設計の中心は、具体的な判断を直接テストできることです。
-Controller・UseCase・Service・Domainの分担、用途別のQuery／Command Port、
-SQLiteの保存処理まで、画面を操作しながらコードを追えます。
 
 [起動する](#起動する) · [デモ](#デモの進め方) · [依存関係](#パッケージの依存関係) ·
 [実行フロー](#画面から保存までの実行フロー) · [配置](#ディレクトリの責務) ·

@@ -26,7 +26,7 @@ async function dashboard() {
 assert.deepEqual(await (await request("/api/health")).json(), { status: "ok" });
 const html = await (await request("/")).text();
 assert.match(html, /<html/i);
-assert.match(html, /RENTAL DESK/);
+assert.match(html, /機材レンタル管理/);
 const asset = html.match(/src="(\/assets\/[^"]+\.js)"/)?.[1];
 assert.ok(asset, "Built client script is served.");
 await request(asset);

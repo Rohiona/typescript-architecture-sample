@@ -67,7 +67,7 @@ function createFakeDesk(initial = dashboard()) {
 }
 
 async function ready() {
-  await screen.findByRole("heading", { name: /次の「つくる」に/ });
+  await screen.findByRole("heading", { name: "機材一覧", level: 1 });
 }
 
 describe("貸出デスクの画面", () => {

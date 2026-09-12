@@ -34,7 +34,7 @@ export function reservation(overrides: Partial<Reservation> = {}): Reservation {
 export function createCommandHarness(initial: Reservation[] = []) {
   const rows = initial.map((row) => ({ ...row }));
   let sequence = 0;
-  const transaction: RentalTransaction = {
+  const transaction = {
     getCustomer: vi.fn((id: string) => [member, staff].find((actor) => actor.id === id) ?? null),
     getEquipment: vi.fn((id: string) => (id === camera.id ? camera : null)),
     getReservation: vi.fn((id: string) => rows.find((row) => row.id === id) ?? null),
@@ -49,8 +49,9 @@ export function createCommandHarness(initial: Reservation[] = []) {
       return true;
     }),
     appendActivity: vi.fn(),
-  };
-  const rentals: RentalCommandPort = { transaction: vi.fn((work) => work(transaction)) };
+  } satisfies RentalTransaction;
+  const rentals: RentalCommandPort = { transaction: (work) => work(transaction) };
+  const transactionSpy = vi.spyOn(rentals, "transaction");
   const dependencies = { rentals, clock: { now: vi.fn(() => NOW) }, ids: { next: () => "generated-" + ++sequence } };
-  return { transaction, rows, dependencies };
+  return { transaction, transactionSpy, rows, dependencies };
 }

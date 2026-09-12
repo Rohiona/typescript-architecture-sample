@@ -1,5 +1,5 @@
 import { useId, useState } from "react";
-import { ArrowRight, CalendarDays, Clock3, Info, LockKeyhole } from "lucide-react";
+import { ArrowRight, Clock3 } from "lucide-react";
 import type { Customer, Equipment } from "../../domain/rentals/types.js";
 import type { CreateReservationInput } from "../../application/ports/reservation-command-port.js";
 import { defaultReservationPeriod, fromDateTimeInput, toDateTimeInput } from "./date-time.js";
@@ -23,13 +23,7 @@ export function ReservationForm({ equipment, actor, now, pending, error, onSubmi
   return (
     <section className="booking-panel" id="reservation-form" aria-labelledby="booking-title">
       <div className="panel-heading">
-        <span className="panel-icon">
-          <CalendarDays size={19} />
-        </span>
-        <div>
-          <span className="eyebrow">PLAN YOUR RENTAL</span>
-          <h2 id="booking-title">予約内容を入力</h2>
-        </div>
+        <h2 id="booking-title">予約内容</h2>
         <span className="small-tag">日本時間</span>
       </div>
       <div className="selected-equipment-label">
@@ -38,9 +32,7 @@ export function ReservationForm({ equipment, actor, now, pending, error, onSubmi
       </div>
       {actor.role === "staff" ? (
         <div className="staff-booking-note">
-          <LockKeyhole size={24} />
-          <h3>利用者として予約する</h3>
-          <p>画面上部で利用者を選ぶと、仮予約を体験できます。スタッフは「貸出管理」から貸出・返却を操作できます。</p>
+          <p>予約するには画面上部で利用者を選択してください。スタッフは「貸出管理」で貸出・返却を操作します。</p>
         </div>
       ) : (
         <form
@@ -122,10 +114,6 @@ export function ReservationForm({ equipment, actor, now, pending, error, onSubmi
           </button>
         </form>
       )}
-      <p className="subtle-note">
-        <Info size={13} />
-        料金・決済は発生しない体験用の予約です。
-      </p>
     </section>
   );
 }

@@ -12,7 +12,7 @@ describe("reservation creation service", () => {
     const harness = createCommandHarness();
     const result = createReservationCreationService(harness.dependencies).execute(request);
     expect(result).toMatchObject({ ok: true, value: { status: "held", version: 1, customerId: member.id } });
-    expect(harness.dependencies.rentals.transaction).toHaveBeenCalledOnce();
+    expect(harness.transactionSpy).toHaveBeenCalledOnce();
     expect(harness.transaction.insertReservation).toHaveBeenCalledOnce();
     expect(harness.transaction.appendActivity).toHaveBeenCalledOnce();
   });

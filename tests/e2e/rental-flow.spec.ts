@@ -7,7 +7,7 @@ test.beforeEach(async ({ request }) => {
 
 test("仮予約の在庫競合・期限切れ・確定・貸出・返却を実DBで操作する", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { name: /次の「つくる」に/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "機材一覧", level: 1, exact: true })).toBeVisible();
   await page.getByRole("button", { name: "この内容で仮予約する" }).click();
   const camera = page.getByRole("article", { name: "ミラーレスカメラの予約" });
   await expect(camera.getByText("仮予約", { exact: true })).toBeVisible();
@@ -45,6 +45,6 @@ test("スマホで予約と初期化を操作でき、横にはみ出さない",
   await expect(dialog).toBeVisible();
   await dialog.getByRole("button", { name: "デモを初期化", exact: true }).click();
   await expect(dialog).toHaveCount(0);
-  await expect(page.getByRole("heading", { name: /次の「つくる」に/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "機材一覧", level: 1, exact: true })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });

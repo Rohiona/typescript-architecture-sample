@@ -48,7 +48,7 @@ function ResetDialog({
           <X size={20} />
         </button>
       </div>
-      <h2 id="reset-title">デモをはじめから体験しますか？</h2>
+      <h2 id="reset-title">デモを初期化しますか？</h2>
       <p>追加した予約と貸出履歴を消去し、9月14日 9:00 の初期状態に戻します。</p>
       {error && (
         <p className="inline-error" role="alert">
@@ -81,9 +81,7 @@ export function DemoControls(props: DemoControlsProps) {
   return (
     <section className="demo-strip" aria-label="デモの操作">
       <div className="demo-clock">
-        <span className="demo-badge">
-          <span /> LIVE DEMO
-        </span>
+        <span className="demo-clock-label">デモ時刻</span>
         <div className="clock-reading">
           <Clock3 size={17} />
           <span>{formatDate(props.now)}</span>

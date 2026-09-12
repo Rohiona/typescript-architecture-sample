@@ -55,7 +55,7 @@ function ReservationActions({
         <p className="reservation-guidance">利用後はスタッフに機材を返却してください。</p>
       )}
       {status === "confirmed" && actor.role === "staff" && now < reservation.startAt && (
-        <p className="reservation-guidance">利用開始時刻になると貸し出せます。デモ時刻を進めてお試しください。</p>
+        <p className="reservation-guidance">利用開始時刻になると貸し出せます。画面上部で時刻を進めてください。</p>
       )}
       {status === "confirmed" && actor.role === "staff" && now >= reservation.endAt && (
         <p className="reservation-guidance amber-text">利用終了時刻を過ぎたため、貸し出せません。</p>
@@ -153,7 +153,7 @@ export function ReservationsPanel(props: ReservationsPanelProps) {
           <p>
             {mode === "desk"
               ? "利用者が予約を確定すると、ここで貸出・返却を管理できます。"
-              : "使いたい機材を見つけて、次の予定を立ててみましょう。"}
+              : "機材一覧から予約を作成できます。"}
           </p>
           <button type="button" className="button secondary" onClick={() => props.onBrowse()}>
             機材一覧を見る

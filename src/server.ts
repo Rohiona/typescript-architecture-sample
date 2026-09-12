@@ -11,7 +11,7 @@ const app = createRentalHttpApp(application);
 app.get("/assets/*", serveStatic({ root: "./dist/client" }));
 app.get("/", serveStatic({ path: "./dist/client/index.html" }));
 const server = serve({ fetch: app.fetch, hostname, port }, () => {
-  console.log("RENTAL DESK API: http://" + hostname + ":" + port);
+  console.log("機材レンタル管理 API: http://" + hostname + ":" + port);
 });
 let closing = false;
 const close = () => {
