@@ -1,0 +1,61 @@
+{
+  "name": "typescript-architecture-sample",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A runnable TypeScript architecture sample: equipment rentals, explicit business rules, CQRS ports and SQLite.",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "dev": "concurrently -k -n api,web -c blue,green \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:api": "tsx watch src/server.ts",
+    "dev:web": "vite --host 127.0.0.1",
+    "start": "tsx src/server.ts",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:domain": "vitest run tests/domain",
+    "test:coverage": "vitest run --coverage && node scripts/check-domain-coverage.mjs",
+    "lint": "oxlint --threads=2 --max-warnings=0 && node scripts/check-dependencies.mjs && knip",
+    "format": "oxfmt --write",
+    "format:check": "oxfmt --check",
+    "check": "npm run format:check && npm run typecheck && npm run lint && npm run test:coverage && npm run build",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@hono/node-server": "2.1.1",
+    "better-sqlite3": "13.0.3",
+    "drizzle-orm": "0.45.2",
+    "hono": "4.13.7",
+    "lucide-react": "1.45.0",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "tsx": "4.23.13",
+    "zod": "4.6.2"
+  },
+  "devDependencies": {
+    "@babel/core": "7.29.7",
+    "@babel/preset-typescript": "7.29.7",
+    "@playwright/test": "1.63.0",
+    "@testing-library/react": "16.3.3",
+    "@testing-library/user-event": "14.6.7",
+    "@types/better-sqlite3": "9.6.0",
+    "@types/node": "^24.13.3",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "6.1.1",
+    "@vitest/coverage-v8": "5.0.0",
+    "concurrently": "10.0.5",
+    "dependency-cruiser": "18.2.0",
+    "jsdom": "30.0.1",
+    "knip": "6.35.1",
+    "oxfmt": "0.67.0",
+    "oxlint": "1.82.0",
+    "oxlint-tsgolint": "7.0.2001",
+    "typescript": "7.0.2",
+    "vite": "8.3.0",
+    "vitest": "5.0.0"
+  }
+}

@@ -1,0 +1,172 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "react", "react-hooks"],
+  "options": {
+    "typeAware": true,
+    "reportUnusedDisableDirectives": "error"
+  },
+  "categories": {
+    "correctness": "error"
+  },
+  "rules": {
+    "typescript/no-deprecated": "error",
+    "typescript/no-explicit-any": "error",
+    "typescript/no-floating-promises": "error",
+    "typescript/no-misused-promises": "error",
+    "typescript/no-unused-vars": "error",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "error"
+  },
+  "ignorePatterns": ["dist/**", "coverage/**", "node_modules/**"],
+  "overrides": [
+    {
+      "files": ["src/domain/**/*.ts", "src/application/**/*.ts"],
+      "rules": {
+        "no-restricted-globals": [
+          "error",
+          {
+            "name": "fetch",
+            "message": "Use an injected port."
+          },
+          {
+            "name": "localStorage",
+            "message": "Use an injected storage port."
+          },
+          {
+            "name": "Date",
+            "message": "Use the injected clock and epoch timestamps."
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/domain/**/*.ts", "src/domain/**/*.tsx"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "^[^.]",
+                "message": "Inner layers depend only on local domain, contracts and application modules."
+              },
+              {
+                "regex": "(?:^|/)(?:application|contracts|composition|infrastructure|presentation)(?:/|$)",
+                "message": "Use an application port or use case; concrete outer layers are assembled in Composition."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/application/**/*.ts", "src/application/**/*.tsx"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "^[^.]",
+                "message": "Inner layers depend only on local domain, contracts and application modules."
+              },
+              {
+                "regex": "(?:^|/)(?:composition|infrastructure|presentation)(?:/|$)",
+                "message": "Use an application port or use case; concrete outer layers are assembled in Composition."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/application/services/**/*.ts", "src/application/services/**/*.tsx"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "^[^.]",
+                "message": "Inner layers depend only on local domain, contracts and application modules."
+              },
+              {
+                "regex": "(?:^|/)(?:composition|infrastructure|presentation|usecases)(?:/|$)",
+                "message": "Use an application port or use case; concrete outer layers are assembled in Composition."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/contracts/**/*.ts", "src/contracts/**/*.tsx"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "(?:^|/)(?:application|composition|infrastructure|presentation)(?:/|$)",
+                "message": "Use an application port or use case; concrete outer layers are assembled in Composition."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/presentation/**/*.ts", "src/presentation/**/*.tsx"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "(?:^|/)(?:infrastructure|composition)(?:/|$)",
+                "message": "Use an application port or use case; concrete outer layers are assembled in Composition."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": ["src/presentation/web/main.tsx"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "regex": "(?:^|/)(?:infrastructure)(?:/|$)",
+                "message": "Use an application port or use case; concrete outer layers are assembled in Composition."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "files": [
+        "src/domain/**/*.ts",
+        "src/domain/**/*.tsx",
+        "src/application/**/*.ts",
+        "src/application/**/*.tsx",
+        "src/contracts/**/*.ts",
+        "src/contracts/**/*.tsx",
+        "src/presentation/**/*.ts",
+        "src/presentation/**/*.tsx"
+      ],
+      "rules": {
+        "typescript/consistent-type-imports": [
+          "error",
+          {
+            "prefer": "type-imports",
+            "disallowTypeAnnotations": true
+          }
+        ]
+      }
+    }
+  ]
+}

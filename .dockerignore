@@ -1,0 +1,32 @@
+# Only build inputs enter the context; local databases, credentials, and IDE files stay outside.
+**
+!Dockerfile
+!package.json
+!package-lock.json
+!index.html
+!tsconfig.json
+!vite.config.ts
+!src/
+!src/**
+
+# Also exclude local-only files if they appear beneath src/.
+**/node_modules/
+**/.git/
+**/.idea/
+**/.vscode/
+**/.fleet/
+**/.codex/
+**/.data/
+**/.env
+**/.env.*
+**/.dev.vars
+**/.dev.vars.*
+**/*.db
+**/*.db-shm
+**/*.db-wal
+**/*.sqlite
+**/*.sqlite-shm
+**/*.sqlite-wal
+**/*.pem
+**/*.key
+**/*.log
