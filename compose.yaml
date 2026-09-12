@@ -1,0 +1,18 @@
+services:
+  app:
+    build:
+      context: .
+      target: runtime
+    init: true
+    environment:
+      HOST: 0.0.0.0
+      PORT: "3001"
+      DB_PATH: /app/.data/rentals.db
+    ports:
+      - "127.0.0.1:3001:3001"
+    volumes:
+      - rental-data:/app/.data
+    stop_grace_period: 10s
+
+volumes:
+  rental-data:
