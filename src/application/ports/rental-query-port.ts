@@ -1,6 +1,6 @@
 import type { Activity } from "../../contracts/dashboard.js";
 import type { Customer, Equipment, Reservation } from "../../domain/rentals/types.js";
-export interface RentalSnapshot {
+interface RentalSnapshot {
   customers: Customer[];
   equipment: Equipment[];
   reservations: Reservation[];

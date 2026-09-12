@@ -47,6 +47,7 @@ module.exports = {
     enhancedResolveOptions: {
       extensions: [".ts", ".tsx", ".js", ".json"],
       conditionNames: ["import", "node", "default"],
+      exportsFields: ["exports"],
     },
   },
 };

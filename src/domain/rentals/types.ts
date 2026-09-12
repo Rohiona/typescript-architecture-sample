@@ -34,7 +34,7 @@ export interface ReservationRequest extends Period {
   customerId: string;
   quantity: number;
 }
-export interface DomainIssue {
+interface DomainIssue {
   code: string;
   message: string;
 }

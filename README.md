@@ -338,7 +338,7 @@ Domainは値を返すだけで、DBの更新やコミットをしません。
 | [src/presentation/web/](src/presentation/web/)                                 | React画面・部品・Hook、JST表示への変換、CSS、ブラウザーの起動点                    |
 | [src/server.ts](src/server.ts)                                                 | Nodeサーバーの起動・環境設定・静的ファイル配信・終了時処理                         |
 | [tests/](tests/)                                                               | Domain・Application・DB・HTTP・UI・品質ゲート・ブラウザー操作のテスト              |
-| [scripts/](scripts/)                                                           | カバレッジの独自判定など、アプリの外で使う開発用処理                               |
+| [scripts/](scripts/)                                                           | 依存解析・カバレッジ・コンテナの検証など、アプリの外で使う開発用処理               |
 | [.github/workflows/](.github/workflows/)                                       | PRとmain更新時の品質・ブラウザー・コンテナのチェック                               |
 | [Dockerfile](Dockerfile) / [compose.yaml](compose.yaml)                        | 再現可能なコンテナ起動、実行ユーザー、ポートとDBボリュームの設定                   |
 
@@ -383,7 +383,7 @@ APIのURLルーティングはHonoが担当し、フロント側のルーティ�
 | Oxfmt                              | 0.67.0            | インデントや改行を統一する                                             |
 | dependency-cruiser                 | 18.2.0            | importから依存関係を解析し、層の境界や循環を検査する                   |
 | Knip                               | 6.35.1            | 入口から参照をたどり、未使用ファイル・export・依存パッケージを検出する |
-| Babel core / TypeScript preset     | 7.29.7 / 7.29.7   | dependency-cruiserのTypeScript解析を補助する                           |
+| Babel core / TypeScript preset     | 7.29.7 / 7.29.7   | TS/TSXの型構文を除去し、実行時importの解析へ渡す                       |
 
 型定義は `@types/node` 24.13.4、`@types/react` 19.3.0、
 `@types/react-dom` 19.3.0、`@types/better-sqlite3` 9.6.0です。
@@ -495,7 +495,7 @@ Drizzleの定義を書き換えるだけでは、既存DBのテーブルは変�
 | TypeScript                              | 型の不整合、存在しないプロパティ、未使用のローカル変数・引数              | PR CI                          |
 | Oxfmt                                   | インデント・改行などの不統一。CIでは整形済みか確認                        | PR CI、整形はローカル          |
 | Oxlint + tsgolint                       | 非推奨API、未使用import、`any`、未処理Promise、Hooksの違反。警告も0件必須 | PR CI                          |
-| Oxlintの境界ルール + dependency-cruiser | 型・値・動的importの層違反、実行時循環、解決できないimport                | PR CI                          |
+| Oxlintの境界ルール + dependency-cruiser | 型・値・動的importの層違反、実行時循環、未解決import、解析漏れ            | PR CI                          |
 | Knip                                    | 未使用ファイル・export・依存パッケージ、未宣言の依存など                  | PR CI                          |
 | Vitest                                  | 入出力・状態遷移・保存などがテストの期待どおりか                          | PR CI、必要な範囲はローカル    |
 | Testing Library + jsdom                 | Reactの入力・クリック・エラー表示など                                     | Vitest内                       |
@@ -524,13 +524,22 @@ PresentationからInfrastructure・Compositionへの依存も拒否し、
 ブラウザーの起動点 `main.tsx` からCompositionへの接続だけを例外にします。
 
 [dependency-cruiser設定](.dependency-cruiser.cjs) は動的importも含む実行時依存、
-循環、解決不能なimportを検査します。型だけのimportは実行時循環の対象外です。
+循環、解決不能なimportを検査します。
+[Babel設定](.dependency-cruiser.babel.cjs) でTS/TSXの型構文を除去して解析するため、
+型だけのimportは実行時循環の対象外です。
+
+実行するのは [check-dependencies.mjs](scripts/check-dependencies.mjs) です。
+`src/` 配下の `.ts`・`.tsx`・`.mts`・`.cts` を型宣言も含めて明示的に列挙し、
+dependency-cruiserへ渡します。結果に全対象ファイルが含まれることを照合し、
+対象0件・解析漏れ・不正な結果・依存違反を失敗にします。
+
 [境界ルールのテスト](tests/quality/architecture-gates.test.ts) では実際の検査コマンドを使い、
 禁止された型参照・値参照・再export・動的importの拒否と、正しい依存の許可を確認します。
 [dependency-cruiser公式ルール](https://github.com/sverweij/dependency-cruiser/blob/main/doc/rules-reference.md)
 
 TypeScriptやLintが見つけるローカルな未使用に加え、[Knip設定](knip.json) で入口から参照を辿ります。
-サーバー・ブラウザー・スクリプトを入口として設定し、テストも解析します。
+サーバー・ブラウザー・スクリプトの入口とテストを解析します。
+カスタムBabel設定も登録し、解析で使う依存パッケージを参照として認識させます。
 テストだけから使う公開ルールも意図した利用です。未使用かどうかは設定された入口と静的解析の範囲に依存するため、
 動的な参照や新しい起動点を増やす場合は設定も確認します。
 
